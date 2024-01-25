@@ -79,3 +79,4 @@ c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\refint\coinAPI.dll
 c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\coinAPI.pdb
 c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\coinAPI.genruntimeconfig.cache
 c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\ref\coinAPI.dll
+c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\coinAPI.sourcelink.json
