@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7Jr/3hikECEnJZS+9pPjiLmtHupW43PGu7pNX046NyEcQCbemr6t4T0mPU58WHBEyfgstzh5UtoMvp8EXCZFcQ==",
+  "dgSpecHash": "rwZNmKHKfeFv0AwmfY1xXrEfwCZvNVh8W+Q3kA59JvqKGxUnsfykWLwQDCwRFGZEzB7kp6qzO0KblAxXlgoWQg==",
   "success": true,
-  "projectFilePath": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
+  "projectFilePath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hun11\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\hun11\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
