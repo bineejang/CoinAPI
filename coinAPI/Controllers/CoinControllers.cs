@@ -8,8 +8,6 @@ namespace Coin.Controllers;
 [Route("api/[Controller]")]
 [ApiController]
 public class CoinController :ControllerBase{
-
-
 //  MySqlConnectionStringBuilder _context = new MySqlConnectionStringBuilder{
 //         Server = "memo.cxywos9kigxi.ap-northeast-2.rds.amazonaws.com",
 //         Database="MAP",
@@ -60,7 +58,7 @@ using (MySqlDataReader reader = cmd.ExecuteReader()){
     }
 }
 }
-//  while(reader.Read()){
+//  while(reader.Read()){ 
             //         profile.Add(new UserProfile{
             //             id = Convert.ToInt32(reader["user_id"]),
             //         userId = reader["user_name"].ToString(),
@@ -68,44 +66,319 @@ using (MySqlDataReader reader = cmd.ExecuteReader()){
             //         typo = reader["typo"].ToString()
             //     });
             // }
-// [HttpGet("holdings/{id}")]
-// public IActionResult GetHoldings(int id){
+
+[HttpGet("holdings/{id}")]
+public IActionResult GetHoldings(int id){
+using(connection){
+            connection.Open();
+             MySqlCommand cmd = new(@"
+                select coins.count from MAP.Users users
+                join MAP.Coins coins on users.id = coins.userId
+                join MAP.Coin coin on coins.coinId = coin.id
+                where users.id = @id ORDER BY coins.coinId ASC;
+            ", connection);
+            cmd.Parameters.AddWithValue("@id",id);
+            cmd.Parameters["@id"].Value=id;
+            var Wallet = new List<Wallet>();
+           var list = new List<int>();
+using (MySqlDataReader reader = cmd.ExecuteReader()){
+           
+           for(int i =0;i<6;i++)
+           {reader.Read();
+          
+              list.Add(Convert.ToInt32(reader["count"]));
+            }
+               Wallet.Add(new Wallet{
+                 wap = list[0],
+                 app = list[1],
+                 mut = list[2],
+                 pknu = list[3],
+                 pus = list[4],
+                 pufs = list[5],
+              });
+                
+            
+    return Ok(Wallet);
+        }
+    }
+}
+[HttpGet("coin")]
+public IActionResult getCoins(){
+using(connection){
+            connection.Open();
+             MySqlCommand cmd = new(@"
+            SELECT
+                * 
+            FROM 
+                Coin
+            ", connection);
+            var Coin = new List<CoinPrice>();
+using (MySqlDataReader reader = cmd.ExecuteReader()){
+while(reader.Read()){
+                    Coin.Add(new CoinPrice{
+                    id = Convert.ToInt32(reader["id"]),
+                    coinName = reader["coinName"].ToString(),
+                    prevPrice = Convert.ToInt32(reader["prevPrice"]),
+                    currentPrice = Convert.ToInt32(reader["currentPrice"]),
+                    nextRate = Convert.ToInt32(reader["nextrate"]),
+                });
+
+}
+
+}
+return Ok(Coin);
+}
+}
+[HttpPost("coin/sell")]
+public IActionResult CoinSell([FromBody]Contract param){
+using(connection){
+            connection.Open();
+            int count=0;
+            int balance = 0;
+            int currentPrice=0;
+            string coinName;
+             MySqlCommand cmd = new(@"
+            SELECT 
+                count 
+            FROM 
+                Coins 
+            WHERE 
+                coinId = @coinId 
+            AND 
+                userId=@id
+            ", connection);
+             cmd.Parameters.AddWithValue("@coinId",param.coinId);
+            cmd.Parameters.AddWithValue("@id",param.id);
+            using (MySqlDataReader reader1 = cmd.ExecuteReader()){
+                reader1.Read();
+                    count=Convert.ToInt16(reader1["count"]);
+            }
+            MySqlCommand setCountcmd = new(@"
+            UPDATE 
+                coin 
+            set 
+                count = @count
+            WHERE 
+                coinId = @coinId 
+            AND 
+                userId=@id
+            ", connection);
+            setCountcmd.Parameters.AddWithValue("@coinId",param.coinId);
+            setCountcmd.Parameters.AddWithValue("@id",param.id);
+            setCountcmd.Parameters.AddWithValue("@count",count-param.count);
+            setCountcmd.ExecuteNonQuery();
+            MySqlCommand findcmd = new(@"
+            SELECT
+                coins.count, users.balance 
+            FROM
+                Coins coins
+            JOIN 
+                Users users 
+            ON 
+                coins.userId = users.id
+            WHERE 
+                userId = @userId 
+            AND 
+                coinId = @coinId
+            ", connection);
+            findcmd.Parameters.AddWithValue("@coinId",param.coinId);
+            findcmd.Parameters.AddWithValue("@id",param.id);
+            using (MySqlDataReader reader2 = cmd.ExecuteReader()){
+                reader2.Read();
+                count = Convert.ToInt16(reader2["count"]);
+                balance = Convert.ToInt16(reader2["balance"]);
+            }
+            MySqlCommand pricecmd = new(@"
+            SELECT 
+                currentPrice 
+            FROM     
+                Coin 
+            WHERE 
+                id=@coinId
+            ", connection);
+            pricecmd.Parameters.AddWithValue("@coinId",param.coinId);
+            using (MySqlDataReader reader3 = cmd.ExecuteReader()){
+                reader3.Read();
+                coinName = reader3["coinName"].ToString();
+            }
+            MySqlCommand calccmd = new(@"
+            UPDATE 
+                Users 
+            SET
+                balance = @balance
+            UPDATE 
+                Wallet 
+            SET 
+                @coinName = @coinBalance
+            UPDATE 
+                Wallet 
+            SET 
+                total =  P_WAP+P_MUT+P_APP+P_PKNU+P_PUS+P_PUFS
+            ", connection);
+            calccmd.Parameters.AddWithValue("@coinName",coinName);
+            calccmd.Parameters.AddWithValue("@balance",balance+count*currentPrice);
+            calccmd.Parameters.AddWithValue("@coinBalance",currentPrice*count);
+            calccmd.ExecuteNonQuery();
+            return Ok("매도체결");
+}
+
+}
+[HttpPost("coin/buy")]
+public IActionResult Coinbuy([FromBody]Contract param){
+using(connection){
+            connection.Open();
+            int count=0;
+            int balance = 0;
+            int currentPrice=0;
+            string coinName;
+             MySqlCommand cmd = new(@"
+            SELECT 
+                count 
+            FROM 
+                Coins 
+            WHERE 
+                coinId = @coinId 
+            AND 
+                userId=@id
+            ", connection);
+             cmd.Parameters.AddWithValue("@coinId",param.coinId);
+            cmd.Parameters.AddWithValue("@id",param.id);
+            using (MySqlDataReader reader1 = cmd.ExecuteReader()){
+                reader1.Read();
+                    count=Convert.ToInt16(reader1["count"]);
+            }
+            MySqlCommand setCountcmd = new(@"
+            UPDATE 
+                coin 
+            set 
+                count = @count
+            WHERE 
+                coinId = @coinId 
+            AND 
+                userId=@id
+            ", connection);
+            setCountcmd.Parameters.AddWithValue("@coinId",param.coinId);
+            setCountcmd.Parameters.AddWithValue("@id",param.id);
+            setCountcmd.Parameters.AddWithValue("@count",count+param.count);
+            setCountcmd.ExecuteNonQuery();
+            MySqlCommand findcmd = new(@"
+            SELECT
+                coins.count, users.balance 
+            FROM
+                Coins coins
+            JOIN 
+                Users users 
+            ON 
+                coins.userId = users.id
+            WHERE 
+                userId = @userId 
+            AND 
+                coinId = @coinId
+            ", connection);
+            findcmd.Parameters.AddWithValue("@coinId",param.coinId);
+            findcmd.Parameters.AddWithValue("@id",param.id);
+            using (MySqlDataReader reader2 = cmd.ExecuteReader()){
+                reader2.Read();
+                count = Convert.ToInt16(reader2["count"]);
+                balance = Convert.ToInt16(reader2["balance"]);
+            }
+            MySqlCommand pricecmd = new(@"
+            SELECT 
+                currentPrice 
+            FROM     
+                Coin 
+            WHERE 
+                id=@coinId
+            ", connection);
+            pricecmd.Parameters.AddWithValue("@coinId",param.coinId);
+            using (MySqlDataReader reader3 = cmd.ExecuteReader()){
+                reader3.Read();
+                coinName = reader3["coinName"].ToString();
+            }
+            MySqlCommand calccmd = new(@"
+            UPDATE 
+                Users 
+            SET
+                balance = @balance
+            UPDATE 
+                Wallet 
+            SET 
+                @coinName = @coinBalance
+            UPDATE 
+                Wallet 
+            SET 
+                total =  P_WAP+P_MUT+P_APP+P_PKNU+P_PUS+P_PUFS
+            ", connection);
+            calccmd.Parameters.AddWithValue("@coinName",coinName);
+            calccmd.Parameters.AddWithValue("@balance",balance-count*currentPrice);
+            calccmd.Parameters.AddWithValue("@coinBalance",currentPrice*count);
+            calccmd.ExecuteNonQuery();
+            return Ok("매수체결");
+}
+
+}
+// [HttpGet("ranking")]
+// public IActionResult getRanking(){
 // using(connection){
 //             connection.Open();
 //              MySqlCommand cmd = new(@"
-//                 SELECT
-//                     *
-//                 FROM wallet
-//                 WHERE user_id = @id
+//            SELECT
+//                 balance 
+//            FROM 
+//                 Users
+//             ORDER BY 
+//                 balance DESC
+//             LIMIT 3
+//             ", connection);
+//             var list = new List<int>();
+// using (MySqlDataReader reader = cmd.ExecuteReader()){
+// while(reader.Read()){
+//                     list.Add(Convert.ToInt32(reader["balance"]));
+// }
+// MySqlCommand cmd2 = new(@"
+//            SELECT
+//                 balance 
+//            FROM 
+//                 Users
+//             ORDER BY 
+//                 balance DESC
+//             LIMIT 3
+//             ", connection);
+// }
+// return Ok(list);
+// }
+// }
+// [HttpGet("rate")]
+// public IActionResult getRate(int id){
+// using(connection){
+//             connection.Open();
+//              MySqlCommand cmd = new(@"
+//            SELECT 
+//                 admin 
+//            FROM 
+//                 Users 
+//            WHERE 
+//                 id = @id
 //             ", connection);
 //             cmd.Parameters.AddWithValue("@id",id);
-//             cmd.Parameters["@id"].Value=id;
-//             var Wallet = new List<Wallet>();
+//             var Coin = new List<CoinPrice>();
 // using (MySqlDataReader reader = cmd.ExecuteReader()){
-//             while(reader.Read()){
-//                     Wallet.Add(new Wallet{
-//                 wallet = Convert.ToInt32(reader["wallet_id"]),
-//                 wap = Convert.ToInt32(reader["wap"]),
-//                 app = Convert.ToInt32(reader["app"]),
-//                 mut = Convert.ToInt32(reader["mut"]),
-//                 pknu = Convert.ToInt32(reader["pknu"]),
-//                 pus = Convert.ToInt32(reader["pus"]),
-//                 pufs = Convert.ToInt32(reader["pufs"]),
-//                 total = Convert.ToInt32(reader["balance"])
+// while(reader.Read()){
+//                     Coin.Add(new CoinPrice{
+//                     id = Convert.ToInt32(reader["id"]),
+//                     coinName = reader["coinName"].ToString(),
+//                     prevPrice = Convert.ToInt32(reader["prevPrice"]),
+//                     currentPrice = Convert.ToInt32(reader["currentPrice"]),
+//                     nextRate = Convert.ToInt32(reader["nextrate"]),
 //                 });
-//             }
-//     return Ok(Wallet);
-//         }
-//     }
-
-
 
 // }
-// [HttpGet("coin")]
-// public IActionResult GetCoin(){
-// return Ok();
+
 // }
-// [HttpGet("ranking")]
+// return Ok(Coin);
+// }
+// }
+
 
 
 
