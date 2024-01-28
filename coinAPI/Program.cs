@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddSwaggerGen();
 
+builder.Services.AddSwaggerGen();
 builder.Services.AddCors(p => p.AddPolicy("corsapp",builder=>{
     builder.WithOrigins().AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));
