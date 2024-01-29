@@ -78,7 +78,7 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             var Wallet = new List<Wallet>(0);
-            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, pufst = 0;
+            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, pufst = 0,totalt = 0;
             var list = new List<int>(0);
             MySqlCommand cmd1 = new(@"
                select IFNULL(count,0) from MAP.Users users
@@ -197,6 +197,28 @@ public class CoinController : ControllerBase
 
                 }
             }
+             MySqlCommand cmd7 = new(@"
+               SELECT
+                users.id,(users.balance + SUM(wallet.Total)) as sum
+            FROM 
+                Users users
+            right JOIN 
+                Wallet wallet 
+            ON 
+                users.id = @id
+            ", connection);
+            cmd7.Parameters.AddWithValue("@id", id);
+            cmd7.Parameters["@id"].Value = id;
+            using (MySqlDataReader reader7 = cmd7.ExecuteReader())
+            {
+                while (reader7.Read())
+                {
+
+
+                    totalt = Convert.ToInt32(reader7["sum"]);
+
+                }
+            }
             Wallet.Add(new Wallet
             {
                 wap = wapt,
@@ -204,7 +226,8 @@ public class CoinController : ControllerBase
                 mus = must,
                 pknu = pknut,
                 pus = pust,
-                pufs = pufst
+                pufs = pufst,
+                total = totalt
             });
             return Ok(Wallet);
         }
@@ -635,16 +658,17 @@ public class CoinController : ControllerBase
             {
                 while (reader.Read())
                 {
-                    list.Add(new RankingAll{
-                        balance =Convert.ToInt32(reader["balance"]),
+                    list.Add(new RankingAll
+                    {
+                        balance = Convert.ToInt32(reader["balance"]),
                         id = Convert.ToInt16(reader["id"]),
                         name = reader["name"].ToString(),
                         crew = reader["crew"].ToString(),
                         type = reader["type"].ToString(),
                         club = reader["club"].ToString(),
                         phonenum = reader["phonenum"].ToString(),
-                        total =Convert.ToInt32(reader["sum"]),
-                        });
+                        total = Convert.ToInt32(reader["sum"]),
+                    });
                 }
                 return Ok(list);
             }
