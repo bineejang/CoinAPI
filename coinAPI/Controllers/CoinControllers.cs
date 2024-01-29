@@ -78,7 +78,7 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             var Wallet = new List<Wallet>(0);
-            int wapt = 0, appt = 0, mutt = 0, pknut = 0, pust = 0, pufst = 0;
+            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, pufst = 0;
             var list = new List<int>(0);
             MySqlCommand cmd1 = new(@"
                select IFNULL(count,0) from MAP.Users users
@@ -117,7 +117,7 @@ public class CoinController : ControllerBase
                 {
 
 
-                    appt = Convert.ToInt32(reader2["IFNULL(count,0)"]);
+                    must = Convert.ToInt32(reader2["IFNULL(count,0)"]);
 
                 }
             }
@@ -136,7 +136,7 @@ public class CoinController : ControllerBase
                 {
 
 
-                    mutt = Convert.ToInt32(reader3["IFNULL(count,0)"]);
+                    appt = Convert.ToInt32(reader3["IFNULL(count,0)"]);
 
                 }
             }
@@ -201,7 +201,7 @@ public class CoinController : ControllerBase
             {
                 wap = wapt,
                 app = appt,
-                mut = mutt,
+                mus = must,
                 pknu = pknut,
                 pus = pust,
                 pufs = pufst
@@ -418,7 +418,7 @@ public class CoinController : ControllerBase
             setCountcmd.ExecuteNonQuery();
             MySqlCommand findcmd = new(@"
             SELECT
-                IFNULL(coins.count,0),IFNULL(users.balance,0) 
+                coins.count,users.balance
             FROM
                 Coins coins
             JOIN 
@@ -436,8 +436,8 @@ public class CoinController : ControllerBase
             {
                 while (reader2.Read())
                 {
-                    count = Convert.ToInt32(reader2["IFNULL(coins.count,0)"]);
-                    balance = Convert.ToInt32(reader2["IFNULL(users.balance,0)"]);
+                    count = Convert.ToInt32(reader2["count"]);
+                    balance = Convert.ToInt32(reader2["balance"]);
                     Console.WriteLine("count:{0},balance:{1}", count, balance);
                 }
             }
@@ -513,18 +513,19 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             MySqlCommand cmd = new(@"
-            SELECT
-                users.id,users.balance + SUM(wallet.Total) as sum
+           SELECT
+                *,users.balance + SUM(wallet.Total) as sum
             FROM 
                 Users users
             JOIN 
                 Wallet wallet 
             ON 
                 users.id =  wallet.userId
+            group by wallet.userId
             ORDER BY 
                 sum 
-            DESC   
-                LIMIT 3
+            DESC
+                LIMIT 3;
             ", connection);
             var list = new List<int>();
             using (MySqlDataReader reader = cmd.ExecuteReader())
@@ -535,18 +536,19 @@ public class CoinController : ControllerBase
                 }
             }
             MySqlCommand cmd2 = new(@"
-          SELECT
-                users.id,users.balance + SUM(wallet.Total) as sum
+         SELECT
+                *,users.balance + SUM(wallet.Total) as sum
             FROM 
                 Users users
             JOIN 
                 Wallet wallet 
             ON 
                 users.id =  wallet.userId
+            group by wallet.userId
             ORDER BY 
                 sum 
         ASC
-            LIMIT 1
+            LIMIT 1;
             ", connection);
             using (MySqlDataReader reader2 = cmd2.ExecuteReader())
             {
@@ -616,23 +618,33 @@ public class CoinController : ControllerBase
             connection.Open();
             MySqlCommand cmd = new(@"
             SELECT
-                users.id,users.balance + SUM(wallet.Total) as sum
+                *,users.balance + SUM(wallet.Total) as sum
             FROM 
                 Users users
             JOIN 
                 Wallet wallet 
             ON 
                 users.id =  wallet.userId
+            group by wallet.userId
             ORDER BY 
                 sum 
-            DESC  
+            DESC;
             ", connection);
-            var list = new List<int>();
+            var list = new List<RankingAll>();
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    list.Add(Convert.ToInt32(reader["sum"]));
+                    list.Add(new RankingAll{
+                        balance =Convert.ToInt32(reader["balance"]),
+                        id = Convert.ToInt16(reader["id"]),
+                        name = reader["name"].ToString(),
+                        crew = reader["crew"].ToString(),
+                        type = reader["type"].ToString(),
+                        club = reader["club"].ToString(),
+                        phonenum = reader["phonenum"].ToString(),
+                        total =Convert.ToInt32(reader["sum"]),
+                        });
                 }
                 return Ok(list);
             }
