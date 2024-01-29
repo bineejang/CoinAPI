@@ -294,6 +294,9 @@ public class CoinController : ControllerBase
                     count = Convert.ToInt32(reader1["count"]);
                 }
             }
+            if(count<param.count){
+                return StatusCode(400,"수량이 부족합니다.");
+            }else{
             MySqlCommand setCountcmd = new(@"
             UPDATE 
                 Coins 
@@ -393,6 +396,7 @@ public class CoinController : ControllerBase
             totalcmd.Parameters.AddWithValue("@totalId", param.coinId);
             totalcmd.ExecuteNonQuery();
             return Ok("매도체결");
+            }
         }
 
     }
