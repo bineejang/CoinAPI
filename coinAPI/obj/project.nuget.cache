@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "7Jr/3hikECEnJZS+9pPjiLmtHupW43PGu7pNX046NyEcQCbemr6t4T0mPU58WHBEyfgstzh5UtoMvp8EXCZFcQ==",
+  "dgSpecHash": "9tGCD+qCOseg8m7oBIIjFCIwYqMKfHY3ym8atYkX8k6wxKfUdBCtywirmrWLFUeB+t2dm8lIa6PyUz9moYtRiw==",
   "success": true,
   "projectFilePath": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
   "expectedPackageFiles": [
@@ -42,6 +42,7 @@
     "C:\\Users\\hun11\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\hun11\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\hun11\\.nuget\\packages\\mysql.data\\8.3.0\\mysql.data.8.3.0.nupkg.sha512",
+    "C:\\Users\\hun11\\.nuget\\packages\\quartz\\3.8.0\\quartz.3.8.0.nupkg.sha512",
     "C:\\Users\\hun11\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\hun11\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\hun11\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

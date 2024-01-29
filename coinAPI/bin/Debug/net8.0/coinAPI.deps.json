@@ -12,6 +12,7 @@
           "Microsoft.Data.SqlClient": "5.1.4",
           "Microsoft.EntityFrameworkCore": "8.0.1",
           "MySql.Data": "8.3.0",
+          "Quartz": "3.8.0",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
@@ -415,6 +416,18 @@
             "rid": "win-x64",
             "assetType": "native",
             "fileVersion": "4.1.0.0"
+          }
+        }
+      },
+      "Quartz/3.8.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0",
+          "System.Configuration.ConfigurationManager": "6.0.1"
+        },
+        "runtime": {
+          "lib/net6.0/Quartz.dll": {
+            "assemblyVersion": "3.8.0.0",
+            "fileVersion": "3.8.0.0"
           }
         }
       },
@@ -948,6 +961,13 @@
       "sha512": "sha512-bAQlkLYvTYt5MtXAgHGURSBSUWynIvyN2FVQFUg51I2grxsOfnJSyGvO7YsDRnU7IvUNfMdxq8rNXiP5P4hMlw==",
       "path": "mysql.data/8.3.0",
       "hashPath": "mysql.data.8.3.0.nupkg.sha512"
+    },
+    "Quartz/3.8.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XYg+O+yw24kNLqp1YyEaZCzpQyVhcLQ5vep61RDKPZFjRNMBfBxcZiHNRFMNuN0XQIQ6zTGTHdZl9h7CuEVvXA==",
+      "path": "quartz/3.8.0",
+      "hashPath": "quartz.3.8.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.4.0": {
       "type": "package",

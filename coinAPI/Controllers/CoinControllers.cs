@@ -559,7 +559,55 @@ public class CoinController : ControllerBase
         }
 
     }
-    
+    [HttpGet("rate")]
+    public IActionResult getRate([FromQuery] GetRate param)
+    {
+        using (connection)
+        {
+            connection.Open();
+            MySqlCommand cmd = new(@"
+           select admin from Users
+            where id = @id
+            and exists (
+            select 1 from Users
+            where id = @id)
+            ", connection);
+            cmd.Parameters.AddWithValue("@id", param.id);
+
+            int rate = 0;
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+
+                while (reader.Read())
+
+                    if (Convert.ToBoolean(reader["admin"]) == false)
+
+                    {
+                        return StatusCode(400, "관리자 권한이 필요합니다.");
+
+                    }
+            }
+
+            MySqlCommand cmd2 = new(@"
+          SELECT 
+            nextrate
+          FROM 
+            Coin 
+          WHERE 
+            id = @coinId
+         ", connection);
+            cmd2.Parameters.AddWithValue("@coinId", param.coin);
+            using (MySqlDataReader reader2 = cmd2.ExecuteReader())
+            {
+                while (reader2.Read())
+                {
+                    rate = Convert.ToInt16(reader2["nextrate"]);
+                }
+            }
+            return Ok(rate);
+        }
+    }
+
     [HttpGet("ranking/all")]
     public IActionResult getRankingAll()
     {

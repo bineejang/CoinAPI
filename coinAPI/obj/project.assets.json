@@ -671,6 +671,23 @@
           }
         }
       },
+      "Quartz/3.8.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "2.1.1",
+          "System.Configuration.ConfigurationManager": "6.0.1"
+        },
+        "compile": {
+          "lib/net6.0/Quartz.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Quartz.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Swashbuckle.AspNetCore/6.4.0": {
         "type": "package",
         "dependencies": {
@@ -2479,6 +2496,26 @@
         "runtimes/win-x64/native/krbcc64.dll"
       ]
     },
+    "Quartz/3.8.0": {
+      "sha512": "XYg+O+yw24kNLqp1YyEaZCzpQyVhcLQ5vep61RDKPZFjRNMBfBxcZiHNRFMNuN0XQIQ6zTGTHdZl9h7CuEVvXA==",
+      "type": "package",
+      "path": "quartz/3.8.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/Quartz.dll",
+        "lib/net462/Quartz.xml",
+        "lib/net472/Quartz.dll",
+        "lib/net472/Quartz.xml",
+        "lib/net6.0/Quartz.dll",
+        "lib/net6.0/Quartz.xml",
+        "lib/netstandard2.0/Quartz.dll",
+        "lib/netstandard2.0/Quartz.xml",
+        "quartz-logo-small.png",
+        "quartz.3.8.0.nupkg.sha512",
+        "quartz.nuspec"
+      ]
+    },
     "Swashbuckle.AspNetCore/6.4.0": {
       "sha512": "eUBr4TW0up6oKDA5Xwkul289uqSMgY0xGN4pnbOIBqCcN9VKGGaPvHX3vWaG/hvocfGDP+MGzMA0bBBKz2fkmQ==",
       "type": "package",
@@ -3876,6 +3913,7 @@
       "Microsoft.Data.SqlClient >= 5.1.4",
       "Microsoft.EntityFrameworkCore >= 8.0.1",
       "MySql.Data >= 8.3.0",
+      "Quartz >= 3.8.0",
       "Swashbuckle.AspNetCore >= 6.4.0"
     ]
   },
@@ -3931,6 +3969,10 @@
           "MySql.Data": {
             "target": "Package",
             "version": "[8.3.0, )"
+          },
+          "Quartz": {
+            "target": "Package",
+            "version": "[3.8.0, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
