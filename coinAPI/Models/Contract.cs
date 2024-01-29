@@ -5,5 +5,5 @@ public class Contract{
 
     public int id{get;set;}
     public int coinId{get;set;}
-    public int count{get;set;}
+    public UInt16 count{get;set;}
 }}
