@@ -81,3 +81,5 @@ c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\coinAPI.genruntimecon
 c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\ref\coinAPI.dll
 c:\Users\hun11\바탕 화면\coin\coinAPI\obj\Debug\net8.0\coinAPI.sourcelink.json
 c:\Users\hun11\바탕 화면\coin\coinAPI\bin\Debug\net8.0\Quartz.dll
+c:\Users\hun11\바탕 화면\coin\coinAPI\bin\Debug\net8.0\Quartz.Extensions.DependencyInjection.dll
+c:\Users\hun11\바탕 화면\coin\coinAPI\bin\Debug\net8.0\Quartz.Extensions.Hosting.dll

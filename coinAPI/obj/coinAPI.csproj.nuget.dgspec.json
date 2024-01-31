@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {}
+    "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {}
   },
   "projects": {
-    "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {
+    "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
+        "projectUniqueName": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
         "projectName": "coinAPI",
-        "projectPath": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
+        "projectPath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
         "packagesPath": "C:\\Users\\hun11\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\obj\\",
+        "outputPath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hun11\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -50,11 +50,23 @@
               "target": "Package",
               "version": "[8.0.1, )"
             },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[8.3.0, )"
             },
             "Quartz": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
+            "Quartz.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
+            "Quartz.Extensions.Hosting": {
               "target": "Package",
               "version": "[3.8.0, )"
             },

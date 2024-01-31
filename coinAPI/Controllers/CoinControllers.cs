@@ -40,6 +40,10 @@ public class CoinController : ControllerBase
 
         using (connection)
         {
+            if (param.userId == "" || param.password == "")
+            {
+                return StatusCode(400, "아이디와 비번을  확인해주세요");
+            }
             connection.Open();
             MySqlCommand cmd = new(@"
                 select * from 
@@ -53,6 +57,7 @@ public class CoinController : ControllerBase
             {
                 while (reader.Read())
                 {
+
                     profile = new UserProfile
                     {
                         id = Convert.ToInt32(reader["id"]),
@@ -63,7 +68,10 @@ public class CoinController : ControllerBase
                         phonenum = reader["phonenum"].ToString(),
                         admin = Convert.ToBoolean(reader["admin"])
                     };
-
+                    if (profile.id == 0)
+                    {
+                        return StatusCode(400, "비밀번호가 맞지 않습니다.");
+                    }
                 }
 
             }
@@ -78,7 +86,7 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             var Wallet = new List<Wallet>(0);
-            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, pufst = 0,totalt = 0;
+            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, pufst = 0, totalt = 0;
             var list = new List<int>(0);
             MySqlCommand cmd1 = new(@"
                select IFNULL(count,0) from MAP.Users users
@@ -117,7 +125,7 @@ public class CoinController : ControllerBase
                 {
 
 
-                    must = Convert.ToInt32(reader2["IFNULL(count,0)"]);
+                    appt = Convert.ToInt32(reader2["IFNULL(count,0)"]);
 
                 }
             }
@@ -136,7 +144,7 @@ public class CoinController : ControllerBase
                 {
 
 
-                    appt = Convert.ToInt32(reader3["IFNULL(count,0)"]);
+                    must = Convert.ToInt32(reader3["IFNULL(count,0)"]);
 
                 }
             }
@@ -197,7 +205,7 @@ public class CoinController : ControllerBase
 
                 }
             }
-             MySqlCommand cmd7 = new(@"
+            MySqlCommand cmd7 = new(@"
                SELECT
                 users.id,(users.balance + SUM(wallet.Total)) as sum
             FROM 
@@ -294,10 +302,13 @@ public class CoinController : ControllerBase
                     count = Convert.ToInt32(reader1["count"]);
                 }
             }
-            if(count<param.count){
-                return StatusCode(400,"수량이 부족합니다.");
-            }else{
-            MySqlCommand setCountcmd = new(@"
+            if (count < param.count)
+            {
+                return StatusCode(400, "수량이 부족합니다.");
+            }
+            else
+            {
+                MySqlCommand setCountcmd = new(@"
             UPDATE 
                 Coins 
             set 
@@ -307,11 +318,11 @@ public class CoinController : ControllerBase
             AND 
                 userId=@id
             ", connection);
-            setCountcmd.Parameters.AddWithValue("@coinId", param.coinId);
-            setCountcmd.Parameters.AddWithValue("@id", param.id);
-            setCountcmd.Parameters.AddWithValue("@count", count - param.count);
-            setCountcmd.ExecuteNonQuery();
-            MySqlCommand findcmd = new(@"
+                setCountcmd.Parameters.AddWithValue("@coinId", param.coinId);
+                setCountcmd.Parameters.AddWithValue("@id", param.id);
+                setCountcmd.Parameters.AddWithValue("@count", count - param.count);
+                setCountcmd.ExecuteNonQuery();
+                MySqlCommand findcmd = new(@"
             SELECT
                 IFNULL(coins.count,0),IFNULL(users.balance,0) 
             FROM
@@ -325,17 +336,17 @@ public class CoinController : ControllerBase
             AND 
                 coinId = @coinId 
             ", connection);
-            findcmd.Parameters.AddWithValue("@coinId", param.coinId);
-            findcmd.Parameters.AddWithValue("@userId", param.id);
-            using (MySqlDataReader reader2 = findcmd.ExecuteReader())
-            {
-                while (reader2.Read())
+                findcmd.Parameters.AddWithValue("@coinId", param.coinId);
+                findcmd.Parameters.AddWithValue("@userId", param.id);
+                using (MySqlDataReader reader2 = findcmd.ExecuteReader())
                 {
-                    count = Convert.ToInt32(reader2["IFNULL(coins.count,0)"]);
-                    balance = Convert.ToUInt32(reader2["IFNULL(users.balance,0)"]);
+                    while (reader2.Read())
+                    {
+                        count = Convert.ToInt32(reader2["IFNULL(coins.count,0)"]);
+                        balance = Convert.ToUInt32(reader2["IFNULL(users.balance,0)"]);
+                    }
                 }
-            }
-            MySqlCommand pricecmd = new(@"
+                MySqlCommand pricecmd = new(@"
             SELECT 
                 currentPrice
             FROM     
@@ -343,15 +354,15 @@ public class CoinController : ControllerBase
             WHERE 
                 id=@coinId
             ", connection);
-            pricecmd.Parameters.AddWithValue("@coinId", param.coinId);
-            using (MySqlDataReader reader3 = pricecmd.ExecuteReader())
-            {
-                while (reader3.Read())
+                pricecmd.Parameters.AddWithValue("@coinId", param.coinId);
+                using (MySqlDataReader reader3 = pricecmd.ExecuteReader())
                 {
-                    currentPrice = Convert.ToUInt32(reader3["currentPrice"]);
+                    while (reader3.Read())
+                    {
+                        currentPrice = Convert.ToUInt32(reader3["currentPrice"]);
+                    }
                 }
-            }
-            MySqlCommand calccmd = new(@"
+                MySqlCommand calccmd = new(@"
             UPDATE 
                 Users 
             SET
@@ -361,12 +372,12 @@ public class CoinController : ControllerBase
             ", connection);
 
 
-            calccmd.Parameters.AddWithValue("@balance", balance + param.count * currentPrice);
-            Console.WriteLine("count:{0},balance:{1}", count, balance);
-            calccmd.Parameters.AddWithValue("@userId", param.id);
-            calccmd.ExecuteNonQuery();
-            ushort total = 0;
-            MySqlCommand findtotalcmd = new(@"
+                calccmd.Parameters.AddWithValue("@balance", balance + param.count * currentPrice);
+                Console.WriteLine("count:{0},balance:{1}", count, balance);
+                calccmd.Parameters.AddWithValue("@userId", param.id);
+                calccmd.ExecuteNonQuery();
+                ushort total = 0;
+                MySqlCommand findtotalcmd = new(@"
             SELECT 
                 Total 
             FROM     
@@ -374,15 +385,15 @@ public class CoinController : ControllerBase
             WHERE 
                 totalId=@totalId
             ", connection);
-            findtotalcmd.Parameters.AddWithValue("@totalId", param.coinId);
-            using (MySqlDataReader readerfindtotal = findtotalcmd.ExecuteReader())
-            {
-                while (readerfindtotal.Read())
+                findtotalcmd.Parameters.AddWithValue("@totalId", param.coinId);
+                using (MySqlDataReader readerfindtotal = findtotalcmd.ExecuteReader())
                 {
-                    total = Convert.ToUInt16(readerfindtotal["Total"]);
+                    while (readerfindtotal.Read())
+                    {
+                        total = Convert.ToUInt16(readerfindtotal["Total"]);
+                    }
                 }
-            }
-            MySqlCommand totalcmd = new(@"
+                MySqlCommand totalcmd = new(@"
             UPDATE 
                 Wallet 
             SET
@@ -391,11 +402,11 @@ public class CoinController : ControllerBase
                 and totalId = @totalId
             ", connection);
 
-            totalcmd.Parameters.AddWithValue("@total", total - param.count * currentPrice);
-            totalcmd.Parameters.AddWithValue("@userId", param.id);
-            totalcmd.Parameters.AddWithValue("@totalId", param.coinId);
-            totalcmd.ExecuteNonQuery();
-            return Ok("매도체결");
+                totalcmd.Parameters.AddWithValue("@total", total - param.count * currentPrice);
+                totalcmd.Parameters.AddWithValue("@userId", param.id);
+                totalcmd.Parameters.AddWithValue("@totalId", param.coinId);
+                totalcmd.ExecuteNonQuery();
+                return Ok("매도체결");
             }
         }
 
@@ -595,7 +606,7 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             MySqlCommand cmd = new(@"
-           select admin from Users
+           select IFNULL(admin,0) from Users
             where id = @id
             and exists (
             select 1 from Users
@@ -609,7 +620,7 @@ public class CoinController : ControllerBase
 
                 while (reader.Read())
 
-                    if (Convert.ToBoolean(reader["admin"]) == false)
+                    if (Convert.ToBoolean(reader["IFNULL(admin,0)"]) == false)
 
                     {
                         return StatusCode(400, "관리자 권한이 필요합니다.");
@@ -685,6 +696,7 @@ public class CoinController : ControllerBase
     {
         using (connection)
         {
+            bool admin = false;
             connection.Open();
             MySqlCommand cmd = new(@"
            select admin from Users
@@ -700,14 +712,16 @@ public class CoinController : ControllerBase
 
                 while (reader.Read())
                 {
-                    if (Convert.ToBoolean(reader["admin"]) == false)
-                    {
-                        return StatusCode(400, "관리자 권한이 필요합니다.");
-                    }
+                    admin = Convert.ToBoolean(reader["admin"]);
+
+
+
                 }
             }
+            if (admin == true)
+            {
 
-            MySqlCommand cmd2 = new(@"
+                MySqlCommand cmd2 = new(@"
           UPDATE 
                 Coin 
           SET 
@@ -715,21 +729,26 @@ public class CoinController : ControllerBase
            WHERE 
                 id = @coinId
          ", connection);
-            cmd2.Parameters.AddWithValue("@coinId", param.coin);
-            cmd2.Parameters.AddWithValue("@rate", param.rate);
-            cmd2.ExecuteNonQuery();
-            return Ok("성공하셨습니다.");
+                cmd2.Parameters.AddWithValue("@coinId", param.coin);
+                cmd2.Parameters.AddWithValue("@rate", param.rate);
+                cmd2.ExecuteNonQuery();
+                return Ok("성공하셨습니다.");
+            }
+            else
+            {
+                return StatusCode(400, "관리자 권한이 필요합니다.");
+            }
         }
-
     }
     [HttpGet("time")]
     public IActionResult getTime(int id)
     {
         using (connection)
         {
+            bool admin = false;
             connection.Open();
             MySqlCommand cmd = new(@"
-           select admin from Users
+           select IFNULL(admin,null) from Users
             where id = @id
             and exists (
             select 1 from Users
@@ -743,36 +762,45 @@ public class CoinController : ControllerBase
 
                 while (reader.Read())
                 {
-                    if (Convert.ToBoolean(reader["admin"]) == false)
-                    {
-                        return StatusCode(400, "관리자 권한이 필요합니다.");
-                    }
+                    Console.WriteLine(reader["IFNULL(admin,null)"]);
+                    Console.WriteLine(Convert.ToBoolean(reader["IFNULL(admin,null)"]));
+                    Console.WriteLine(Convert.ToInt16(reader["IFNULL(admin,null)"]));
+                    admin = Convert.ToBoolean(reader["IFNULL(admin,null)"]);
+
                 }
             }
+            if (admin == true)
+            {
 
-            MySqlCommand cmd2 = new(@"
+
+                MySqlCommand cmd2 = new(@"
                         SELECT
                                id,DATE_FORMAT(savedtime,'%H:%i') AS time
                         FROM 
                                 Time
+                                ASC;
                         ", connection);
-            using (MySqlDataReader reader2 = cmd2.ExecuteReader())
-            {
-                // timeElement=TimeOnly.FromDateTime(Convert.ToDateTime(reader2["time"].ToString())),
-                // timeElement=Convert.ToDateTime(reader2["time"].ToString()),
-                while (reader2.Read())
+                using (MySqlDataReader reader2 = cmd2.ExecuteReader())
                 {
-                    time.Add(new GetTime
+                    // timeElement=TimeOnly.FromDateTime(Convert.ToDateTime(reader2["time"].ToString())),
+                    // timeElement=Convert.ToDateTime(reader2["time"].ToString()),
+                    while (reader2.Read())
                     {
-                        timeElement = Convert.ToDateTime(reader2["time"].ToString()),
-                        timeId = Convert.ToInt32(reader2["id"])
-                    });
+                        time.Add(new GetTime
+                        {
+                            timeElement = Convert.ToDateTime(reader2["time"].ToString()),
+                            timeId = Convert.ToInt32(reader2["id"])
+                        });
+                    }
+                    return Ok(time);
                 }
-                return Ok(time);
+
+
             }
-
-
-
+            else
+            {
+                return StatusCode(400, "관리자 권한이 필요합니다.");
+            }
         }
     }
 
@@ -781,6 +809,7 @@ public class CoinController : ControllerBase
     {
         using (connection)
         {
+            bool admin = false;
             connection.Open();
             MySqlCommand cmd = new(@"
            select admin from Users
@@ -791,32 +820,36 @@ public class CoinController : ControllerBase
             ", connection);
             cmd.Parameters.AddWithValue("@id", param.id);
 
-
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
 
                 while (reader.Read())
                 {
-                    if (Convert.ToBoolean(reader["admin"]) == false || reader["admin"] == System.DBNull.Value)
-                    {
-                        return StatusCode(400, "관리자 권한이 필요합니다.");
-                    }
+                    admin = Convert.ToBoolean(reader["admin"]);
+
+
+
                 }
             }
-
-            var time = new List<DateTime>();
-            MySqlCommand cmd2 = new(@"
+            if (admin == true)
+            {
+                var time = new List<DateTime>();
+                MySqlCommand cmd2 = new(@"
          INSERT INTO 
             `Time`(savedtime) 
             VALUES
                 (@time)
 
          ", connection);
-            cmd2.Parameters.AddWithValue("@time", Convert.ToDateTime(param.timeElement).ToString("O"));
-            cmd2.ExecuteNonQuery();
+                cmd2.Parameters.AddWithValue("@time", Convert.ToDateTime(param.timeElement).ToString("O"));
+                cmd2.ExecuteNonQuery();
 
-            return Ok("저장되었습니다.");
-
+                return Ok("저장되었습니다.");
+            }
+            else
+            {
+                return StatusCode(400, "관리자 권한이 필요합니다.");
+                    }
 
         }
     }
@@ -825,6 +858,7 @@ public class CoinController : ControllerBase
     {
         using (connection)
         {
+            bool admin = false;
             connection.Open();
             MySqlCommand cmd = new(@"
            select admin from Users
@@ -835,18 +869,19 @@ public class CoinController : ControllerBase
             ", connection);
             cmd.Parameters.AddWithValue("@id", param.id);
 
-            int rate = 0;
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
 
                 while (reader.Read())
                 {
-                    if (Convert.ToBoolean(reader["admin"]) == false || reader["admin"] == System.DBNull.Value)
-                    {
-                        return StatusCode(400, "관리자 권한이 필요합니다.");
-                    }
+                   admin = Convert.ToBoolean(reader["admin"]);
+                    
+                      
+                    
                 }
             }
+if (admin == true)
+                    {
 
             var time = new List<DateTime>();
             MySqlCommand cmd2 = new(@"
@@ -858,7 +893,9 @@ public class CoinController : ControllerBase
             cmd2.Parameters.AddWithValue("@id", param.timeId);
             cmd2.ExecuteNonQuery();
             return Ok("삭제되었습니다.");
-
+                    }else{
+                        return StatusCode(400,"관리자 권한이 필요합니다.");
+                    }
 
         }
     }
