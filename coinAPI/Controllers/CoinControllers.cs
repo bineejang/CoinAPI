@@ -771,11 +771,12 @@ public class CoinController : ControllerBase
 
 
                 MySqlCommand cmd2 = new(@"
-                        SELECT
-                               id,DATE_FORMAT(savedtime,'%H:%i') AS time
-                        FROM 
-                                Time
-                                ASC;
+                SELECT
+                    id,DATE_FORMAT(savedtime,'%H:%i') AS time
+                FROM 
+                    Time 
+                ORDER BY time ASC ;
+                               
                         ", connection);
                 using (MySqlDataReader reader2 = cmd2.ExecuteReader())
                 {
