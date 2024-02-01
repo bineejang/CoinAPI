@@ -86,7 +86,7 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             var Wallet = new List<Wallet>(0);
-            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, pufst = 0, totalt = 0;
+            int wapt = 0, appt = 0, must = 0, pknut = 0, pust = 0, bufst = 0, totalt = 0;
             var list = new List<int>(0);
             MySqlCommand cmd1 = new(@"
                select IFNULL(count,0) from MAP.Users users
@@ -201,7 +201,7 @@ public class CoinController : ControllerBase
                 {
 
 
-                    pufst = Convert.ToInt32(reader6["IFNULL(count,0)"]);
+                    bufst = Convert.ToInt32(reader6["IFNULL(count,0)"]);
 
                 }
             }
@@ -234,7 +234,7 @@ public class CoinController : ControllerBase
                 mus = must,
                 pknu = pknut,
                 pus = pust,
-                pufs = pufst,
+                bufs = bufst,
                 total = totalt
             });
             return Ok(Wallet);
@@ -280,8 +280,8 @@ public class CoinController : ControllerBase
         {
             connection.Open();
             int count = 0;
-            UInt128 balance = 0;
-            UInt128 currentPrice = 0;
+            int balance = 0;
+            int currentPrice = 0;
             string coinName = "";
             MySqlCommand cmd = new(@"
             SELECT 
@@ -343,7 +343,7 @@ public class CoinController : ControllerBase
                     while (reader2.Read())
                     {
                         count = Convert.ToInt32(reader2["IFNULL(coins.count,0)"]);
-                        balance = Convert.ToUInt32(reader2["IFNULL(users.balance,0)"]);
+                        balance = Convert.ToInt32(reader2["IFNULL(users.balance,0)"]);
                     }
                 }
                 MySqlCommand pricecmd = new(@"
@@ -359,7 +359,7 @@ public class CoinController : ControllerBase
                 {
                     while (reader3.Read())
                     {
-                        currentPrice = Convert.ToUInt32(reader3["currentPrice"]);
+                        currentPrice = Convert.ToInt32(reader3["currentPrice"]);
                     }
                 }
                 MySqlCommand calccmd = new(@"
@@ -376,7 +376,7 @@ public class CoinController : ControllerBase
                 Console.WriteLine("count:{0},balance:{1}", count, balance);
                 calccmd.Parameters.AddWithValue("@userId", param.id);
                 calccmd.ExecuteNonQuery();
-                ushort total = 0;
+                int total = 0;
                 MySqlCommand findtotalcmd = new(@"
             SELECT 
                 Total 
@@ -392,7 +392,7 @@ public class CoinController : ControllerBase
                 {
                     while (readerfindtotal.Read())
                     {
-                        total = Convert.ToUInt16(readerfindtotal["Total"]);
+                        total = Convert.ToInt16(readerfindtotal["Total"]);
                     }
                 }
                 MySqlCommand totalcmd = new(@"
@@ -512,7 +512,7 @@ public class CoinController : ControllerBase
             Console.WriteLine("balance:{0},balance-count*Price:{1},", balance, balance - param.count * currentPrice);
             calccmd.Parameters.AddWithValue("@userId", param.id);
             calccmd.ExecuteNonQuery();
-            ushort total = 0;
+            int total = 0;
             MySqlCommand findtotalcmd = new(@"
             SELECT 
                 Total 
@@ -528,7 +528,7 @@ public class CoinController : ControllerBase
             {
                 while (readerfindtotal.Read())
                 {
-                    total = Convert.ToUInt16(readerfindtotal["Total"]);
+                    total = Convert.ToInt16(readerfindtotal["Total"]);
                 }
             }
             MySqlCommand totalcmd = new(@"

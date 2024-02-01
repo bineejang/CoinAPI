@@ -10,7 +10,7 @@ namespace Coin.Models
           public int mus { get; set; }
           public int pknu { get; set; }
           public int pus { get; set; }
-          public int pufs { get; set; }
+          public int bufs { get; set; }
           public int total { get; set; }
 
 

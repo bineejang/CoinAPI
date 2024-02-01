@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {}
+    "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {
+    "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
+        "projectUniqueName": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
         "projectName": "coinAPI",
-        "projectPath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
+        "projectPath": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
         "packagesPath": "C:\\Users\\hun11\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\obj\\",
+        "outputPath": "c:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hun11\\AppData\\Roaming\\NuGet\\NuGet.Config"
