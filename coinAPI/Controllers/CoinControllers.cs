@@ -384,8 +384,10 @@ public class CoinController : ControllerBase
                 Wallet 
             WHERE 
                 totalId=@totalId
+                and userId = @userId;
             ", connection);
                 findtotalcmd.Parameters.AddWithValue("@totalId", param.coinId);
+                findtotalcmd.Parameters.AddWithValue("@userId", param.id);
                 using (MySqlDataReader readerfindtotal = findtotalcmd.ExecuteReader())
                 {
                     while (readerfindtotal.Read())
