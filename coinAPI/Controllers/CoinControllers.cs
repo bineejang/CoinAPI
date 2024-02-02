@@ -281,7 +281,7 @@ public class CoinController : ControllerBase
             using (MySqlDataReader reader7 = cmd7.ExecuteReader())
             {
                 while (reader7.Read())
-                {
+                {   
                     totalt = Convert.ToInt32(reader7["sum"]);
                 }
             }
@@ -347,7 +347,8 @@ public class CoinController : ControllerBase
     [HttpPost("coin/sell")]
     public IActionResult CoinSell([FromBody] Contract param)
     {   
-        try{
+        try
+        {
         using (connection)
         {
             connection.Open();
@@ -462,7 +463,7 @@ public class CoinController : ControllerBase
                 {
                     while (readerfindtotal.Read())
                     {
-                        total = Convert.ToInt16(readerfindtotal["Total"]);
+                        total = Convert.ToInt32(readerfindtotal["Total"]);
                     }
                 }
                 MySqlCommand totalcmd = new(@"
@@ -482,11 +483,13 @@ public class CoinController : ControllerBase
             }
         }
         }
-         catch (System.Exception)
+        catch (System.Exception)
         {
-            return StatusCode(400,"시스템 오류");
+            return StatusCode(400,"시스템 오류입니다.");
             throw;
         }
+        
+        
 
     }
     [HttpPost("coin/buy")]
@@ -604,7 +607,7 @@ public class CoinController : ControllerBase
             {
                 while (readerfindtotal.Read())
                 {
-                    total = Convert.ToInt16(readerfindtotal["Total"]);
+                    total = Convert.ToInt32(readerfindtotal["Total"]);
                 }
             }
             MySqlCommand totalcmd = new(@"
