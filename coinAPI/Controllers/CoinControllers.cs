@@ -33,7 +33,50 @@ public class CoinController : ControllerBase
         ConnectionTimeout = 60,
         AllowZeroDateTime = true
     }.ConnectionString);
+    [HttpGet("userInfo")]
+    public IActionResult getUserInfo( int id)
+    {
 
+        using (connection)
+        {
+            if (id == 0 || id == null)
+            {
+                return StatusCode(400, "아이디 없음");
+            }
+            else
+            {
+                connection.Open();
+                MySqlCommand cmd = new(@"
+                select * from 
+                Users 
+                WHERE id = @id;
+            ", connection);
+            cmd.Parameters.AddWithValue("@id", id);
+                
+                var profile = new UserProfile();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        profile = new UserProfile
+                        {
+                            id = Convert.ToInt32(reader["id"]),
+                            name = reader["name"].ToString(),
+                            crew = reader["crew"].ToString(),
+                            type = reader["type"].ToString(),
+                            balance = Convert.ToInt32(reader["balance"]),
+                            phonenum = reader["phonenum"].ToString(),
+                            admin = Convert.ToBoolean(reader["admin"])
+                        };
+
+                    }
+
+                }
+                return Ok(profile);
+            }
+        }
+    }
     [HttpPost("login")]
     public IActionResult login([FromBody] login param)
     {
