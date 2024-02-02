@@ -328,7 +328,7 @@ public class CoinController : ControllerBase
                 setCountcmd.ExecuteNonQuery();
                 MySqlCommand findcmd = new(@"
             SELECT
-                IFNULL(coins.count,0),IFNULL(users.balance,0) 
+                IFNULL(users.balance,0) 
             FROM
                 Coins coins
             JOIN 
@@ -346,7 +346,7 @@ public class CoinController : ControllerBase
                 {
                     while (reader2.Read())
                     {
-                        count = Convert.ToInt32(reader2["IFNULL(coins.count,0)"]);
+                        
                         balance = Convert.ToInt32(reader2["IFNULL(users.balance,0)"]);
                     }
                 }
@@ -372,12 +372,10 @@ public class CoinController : ControllerBase
             SET
                 balance = @balance
                 WHERE id = @userId
-
             ", connection);
 
 
                 calccmd.Parameters.AddWithValue("@balance", balance + param.count * currentPrice);
-                Console.WriteLine("count:{0},balance:{1}", count, balance);
                 calccmd.Parameters.AddWithValue("@userId", param.id);
                 calccmd.ExecuteNonQuery();
                 int total = 0;
@@ -408,7 +406,7 @@ public class CoinController : ControllerBase
                 and totalId = @totalId
             ", connection);
 
-                totalcmd.Parameters.AddWithValue("@total", total - param.count * currentPrice);
+                totalcmd.Parameters.AddWithValue("@total", count * currentPrice - param.count * currentPrice);
                 totalcmd.Parameters.AddWithValue("@userId", param.id);
                 totalcmd.Parameters.AddWithValue("@totalId", param.coinId);
                 totalcmd.ExecuteNonQuery();
@@ -462,7 +460,7 @@ public class CoinController : ControllerBase
             setCountcmd.ExecuteNonQuery();
             MySqlCommand findcmd = new(@"
             SELECT
-                coins.count,users.balance
+                IFNULL(users.balance,0)
             FROM
                 Coins coins
             JOIN 
@@ -480,9 +478,9 @@ public class CoinController : ControllerBase
             {
                 while (reader2.Read())
                 {
-                    count = Convert.ToInt32(reader2["count"]);
-                    balance = Convert.ToInt32(reader2["balance"]);
-                    Console.WriteLine("count:{0},balance:{1}", count, balance);
+                    
+                    balance = Convert.ToInt32(reader2["IFNULL(users.balance,0)"]);
+                    
                 }
             }
             MySqlCommand pricecmd = new(@"
@@ -499,7 +497,7 @@ public class CoinController : ControllerBase
                 while (reader3.Read())
                 {
                     currentPrice = Convert.ToInt32(reader3["currentPrice"]);
-                    Console.WriteLine("currentPrice:{0}", currentPrice);
+                    
 
                 }
             }
@@ -544,7 +542,7 @@ public class CoinController : ControllerBase
                 and totalId = @totalId
             ", connection);
 
-            totalcmd.Parameters.AddWithValue("@total", total + param.count * currentPrice);
+            totalcmd.Parameters.AddWithValue("@total", count * currentPrice + param.count * currentPrice);
             totalcmd.Parameters.AddWithValue("@userId", param.id);
             totalcmd.Parameters.AddWithValue("@totalId", param.coinId);
             totalcmd.ExecuteNonQuery();
@@ -560,7 +558,7 @@ public class CoinController : ControllerBase
             connection.Open();
             MySqlCommand cmd = new(@"
            SELECT
-                *,users.balance + SUM(wallet.Total) as sum
+                *,(users.balance + SUM(wallet.Total)) as sum
             FROM 
                 Users users
             JOIN 
@@ -664,7 +662,7 @@ public class CoinController : ControllerBase
             connection.Open();
             MySqlCommand cmd = new(@"
             SELECT
-                *,users.balance + SUM(wallet.Total) as sum
+                *,(users.balance + SUM(wallet.Total)) as sum
             FROM 
                 Users users
             JOIN 
