@@ -5183,19 +5183,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\hun11\\.nuget\\packages\\": {}
+    "/Users/jang-wonbin/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
+      "projectUniqueName": "/Users/jang-wonbin/Desktop/React/CoinAPI/coinAPI/coinAPI.csproj",
       "projectName": "coinAPI",
-      "projectPath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\coinAPI.csproj",
-      "packagesPath": "C:\\Users\\hun11\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hun11\\바탕 화면\\coin\\coinAPI\\obj\\",
+      "projectPath": "/Users/jang-wonbin/Desktop/React/CoinAPI/coinAPI/coinAPI.csproj",
+      "packagesPath": "/Users/jang-wonbin/.nuget/packages/",
+      "outputPath": "/Users/jang-wonbin/Desktop/React/CoinAPI/coinAPI/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\hun11\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/jang-wonbin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -5275,7 +5275,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

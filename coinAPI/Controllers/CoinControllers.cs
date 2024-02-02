@@ -210,10 +210,14 @@ public class CoinController : ControllerBase
                 users.id,(users.balance + SUM(wallet.Total)) as sum
             FROM 
                 Users users
-            right JOIN 
+            JOIN 
                 Wallet wallet 
             ON 
-                users.id = @id
+                users.id =  wallet.userId
+            group by wallet.userId
+            ORDER BY 
+                users.id 
+            ASC;
             ", connection);
             cmd7.Parameters.AddWithValue("@id", id);
             cmd7.Parameters["@id"].Value = id;
