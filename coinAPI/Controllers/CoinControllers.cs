@@ -158,7 +158,7 @@ public class CoinController : ControllerBase
             {
                 while (reader.Read())
                 {
-                    Console.WriteLine(Convert.ToInt32(reader["IFNULL(count,0)"]));
+                    
                     list.Add(
                         Convert.ToInt32(reader["IFNULL(count,0)"])
                     );
@@ -264,7 +264,7 @@ public class CoinController : ControllerBase
                 }
             }
             MySqlCommand cmd7 = new(@"
-               SELECT
+                SELECT
                 users.id,(users.balance + SUM(wallet.Total)) as sum
             FROM 
                 Users users
@@ -272,10 +272,9 @@ public class CoinController : ControllerBase
                 Wallet wallet 
             ON 
                 users.id =  wallet.userId
-            group by wallet.userId
-            ORDER BY 
-                users.id 
-            ASC;
+           where
+                users.id =@id
+            ;
             ", connection);
             cmd7.Parameters.AddWithValue("@id", id);
             cmd7.Parameters["@id"].Value = id;
@@ -586,7 +585,7 @@ public class CoinController : ControllerBase
 
             ", connection);
             calccmd.Parameters.AddWithValue("@balance", balance - param.count * currentPrice);
-            Console.WriteLine("balance:{0},balance-count*Price:{1},", balance, balance - param.count * currentPrice);
+            
             calccmd.Parameters.AddWithValue("@userId", param.id);
             calccmd.ExecuteNonQuery();
             int total = 0;
