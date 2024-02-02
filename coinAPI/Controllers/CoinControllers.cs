@@ -36,7 +36,10 @@ public class CoinController : ControllerBase
     [HttpGet("userInfo")]
     public IActionResult getUserInfo( int id)
     {
-
+        try
+        {
+            
+        
         using (connection)
         {
             if (id == 0 || id == null)
@@ -76,11 +79,17 @@ public class CoinController : ControllerBase
                 return Ok(profile);
             }
         }
+        }
+        catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
     }
     [HttpPost("login")]
     public IActionResult login([FromBody] login param)
     {
-
+            try{
         using (connection)
         {
             if (param.userId == "" || param.password == "")
@@ -120,11 +129,17 @@ public class CoinController : ControllerBase
                 return Ok(profile);
             }
         }
+        }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
     }
-
     [HttpGet("holdings/{id}")]
     public IActionResult GetHoldings(int id)
-    {
+    {   
+        try{
         using (connection)
         {
             connection.Open();
@@ -268,10 +283,7 @@ public class CoinController : ControllerBase
             {
                 while (reader7.Read())
                 {
-
-
                     totalt = Convert.ToInt32(reader7["sum"]);
-
                 }
             }
             Wallet.Add(new Wallet
@@ -286,11 +298,18 @@ public class CoinController : ControllerBase
             });
             return Ok(Wallet);
         }
+        }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
     }
 
     [HttpGet("coin")]
     public IActionResult getCoins()
-    {
+    {   
+        try{
         using (connection)
         {
             connection.Open();
@@ -319,10 +338,17 @@ public class CoinController : ControllerBase
             }
             return Ok(Coin);
         }
+        }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
     }
     [HttpPost("coin/sell")]
     public IActionResult CoinSell([FromBody] Contract param)
-    {
+    {   
+        try{
         using (connection)
         {
             connection.Open();
@@ -456,11 +482,17 @@ public class CoinController : ControllerBase
                 return Ok("매도체결");
             }
         }
+        }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
 
     }
     [HttpPost("coin/buy")]
     public IActionResult Coinbuy([FromBody] Contract param)
-    {
+    {   try{
         using (connection)
         {
             connection.Open();
@@ -591,11 +623,17 @@ public class CoinController : ControllerBase
             totalcmd.ExecuteNonQuery();
             return Ok("매수체결");
         }
+    }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
 
     }
     [HttpGet("ranking")]
     public IActionResult getRanking()
-    {
+    {   try{
         using (connection)
         {
             connection.Open();
@@ -646,11 +684,18 @@ public class CoinController : ControllerBase
             }
             return Ok(list);
         }
+    }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
 
     }
     [HttpGet("rate")]
     public IActionResult getRate([FromQuery] GetRate param)
-    {
+    {   
+        try{
         using (connection)
         {
             connection.Open();
@@ -695,11 +740,18 @@ public class CoinController : ControllerBase
             }
             return Ok(rate);
         }
+        }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
+        
     }
 
     [HttpGet("ranking/all")]
     public IActionResult getRankingAll()
-    {
+    {   try{
         using (connection)
         {
             connection.Open();
@@ -738,11 +790,17 @@ public class CoinController : ControllerBase
             }
 
         }
+    }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
 
     }
     [HttpPost("rate")]
     public IActionResult updateRate([FromBody] GetRate param)
-    {
+    {   try{
         using (connection)
         {
             bool admin = false;
@@ -780,45 +838,31 @@ public class CoinController : ControllerBase
                 cmd2.ExecuteNonQuery();
                 return Ok("성공하셨습니다.");
             }
+        
+            
             else
             {
                 return StatusCode(400, "관리자 권한이 필요합니다.");
             }
         }
     }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
+        
+    }
     [HttpGet("time")]
-    public IActionResult getTime(int id)
-    {
+    public IActionResult getTime()
+    {   try{
         using (connection)
         {
-            bool admin = false;
+           
             connection.Open();
-            MySqlCommand cmd = new(@"
-           select IFNULL(admin,null) from Users
-            where id = @id
-            and exists (
-            select 1 from Users
-            where id = @id)
-            ", connection);
-            cmd.Parameters.AddWithValue("@id", id);
+            
 
-            var time = new List<GetTime>();
-            using (MySqlDataReader reader = cmd.ExecuteReader())
-            {
-
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader["IFNULL(admin,null)"]);
-                    Console.WriteLine(Convert.ToBoolean(reader["IFNULL(admin,null)"]));
-                    Console.WriteLine(Convert.ToInt16(reader["IFNULL(admin,null)"]));
-                    admin = Convert.ToBoolean(reader["IFNULL(admin,null)"]);
-
-                }
-            }
-            if (admin == true)
-            {
-
-
+                var time = new List<GetTime>();
                 MySqlCommand cmd2 = new(@"
                 SELECT
                     id,DATE_FORMAT(savedtime,'%H:%i') AS time
@@ -843,16 +887,19 @@ public class CoinController : ControllerBase
                 }
                 return Ok(time);
             }
-            else
-            {
-                return StatusCode(400, "관리자 권한이 필요합니다.");
-            }
-        }
     }
+             catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
+            
+        }
+    
 
     [HttpPost("time")]
     public IActionResult postTime([FromQuery] GetTime param)
-    {
+    {   try{
         using (connection)
         {
             bool admin = false;
@@ -872,9 +919,6 @@ public class CoinController : ControllerBase
                 while (reader.Read())
                 {
                     admin = Convert.ToBoolean(reader["IFNULL(admin,null)"]);
-
-
-
                 }
             }
             if (admin == true)
@@ -899,9 +943,16 @@ public class CoinController : ControllerBase
 
         }
     }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
+        }
+    }
     [HttpDelete("time")]
     public IActionResult deleteTime([FromQuery] GetTime param)
-    {
+    {   
+        try{
         using (connection)
         {
             bool admin = false;
@@ -921,9 +972,6 @@ public class CoinController : ControllerBase
                 while (reader.Read())
                 {
                     admin = Convert.ToBoolean(reader["IFNULL(admin,null)"]);
-
-
-
                 }
             }
             if (admin == true)
@@ -945,6 +993,12 @@ public class CoinController : ControllerBase
                 return StatusCode(400, "관리자 권한이 필요합니다.");
             }
 
+        }
+        }
+         catch (System.Exception)
+        {
+            return StatusCode(400,"시스템 오류");
+            throw;
         }
     }
 
